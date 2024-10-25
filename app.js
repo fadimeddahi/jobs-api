@@ -6,7 +6,6 @@ const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 
-
 const express = require("express");
 const app = express();
 
@@ -44,8 +43,6 @@ app.use(
     max: 100,
   })
 );
-
-
 
 const port = process.env.PORT || 3000;
 

@@ -6,6 +6,10 @@ const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 const express = require("express");
 const app = express();
 
@@ -16,7 +20,7 @@ const authRouter = require("./routes/auth");
 const jobsRouter = require("./routes/jobs");
 
 // error handler
-const notFoundMiddleware = require("./middleware/not-found");
+const notFound = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
 app.use(express.json());
@@ -24,14 +28,17 @@ app.use(express.json());
 
 // routes
 app.get("/", (req, res) => {
-  res.send("jobs api");
+  res.send('<h1>Jobs API</h1><a href="/api-docs">API Documentation</a>');
 });
+app.use("/api-use ", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobsRouter);
 
-app.use(notFoundMiddleware);
+app.use(notFound);
 app.use(errorHandlerMiddleware);
+
 
 app.use(helmet());
 app.use(cors());
@@ -43,6 +50,10 @@ app.use(
     max: 100,
   })
 );
+
+
+
+
 
 const port = process.env.PORT || 3000;
 

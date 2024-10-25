@@ -1,24 +1,20 @@
-const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerAutogen = require('swagger-autogen')();
+const params = 
+ ['./app.js']
+;
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Jobs API Documentation',
-    version: '1.0.0',
-    description: 'API documentation for the Jobs API',
-  },
-  servers: [
-    {
-      url: 'https://jobs-api-9z7l.onrender.com',
-      description: 'Production Server',
-    },
-  ],
-};
+const Swagger = swaggerAutogen('./swagger.json',params);
 
-const options = {
-  swaggerDefinition,
-  apis: ['./routes/*.js'], // Path to the API docs in the routes folder
-};
+module.exports = Swagger;
 
-const swaggerSpec = swaggerJSDoc(options);
-module.exports = swaggerSpec;
+// app.js:
+
+
+const swaggerUi = require('swagger-ui-express');
+const Swagger = require('./swagger.json');
+
+
+
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(Swagger));
+
+
